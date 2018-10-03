@@ -1,0 +1,28 @@
+import java.util.ArrayList;
+
+public class ParserTester {
+
+	public static void main(String[] args) {
+		SATParser yoParse = new SATParser("src/yo.txt");
+		try {
+			int[][] input = yoParse.parseInput();
+			for (int i = 0; i < input.length; i++) {
+				System.out.print("Clause " + i + ": ");
+				for (int j = 0; j < input[i].length; j++) {
+					if (j != input[i].length - 1) {
+						System.out.print(" |" + input[i][j] + "| " + " - ");
+					}
+					else {
+						System.out.print(" |" + input[i][j] + "| ");
+					}
+				}
+				System.out.println();
+			}
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+	}
+
+}

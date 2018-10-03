@@ -1,0 +1,43 @@
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import java.awt.Dimension;
+import java.awt.BorderLayout;
+
+
+public class SieveGUI {
+	private static int frameWidth = 300;
+	private static int frameHeight = 200;
+
+	public static void main(String[] args) {
+		JFrame mainFrame = new JFrame("Austin Williams Sieve Wrapper GUI");
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.setSize(frameWidth, frameHeight);
+		
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		mainPanel.setSize(frameWidth, frameHeight);
+		
+		JPanel inputPanel = new JPanel();
+		mainPanel.add(inputPanel, BorderLayout.CENTER);
+		
+		JTextField inputBox = new JTextField();
+		inputBox.setSize(new Dimension(150, 40));
+		inputPanel.add(inputBox);
+		
+		JButton buttonSubmit = new JButton("Submit");
+		inputPanel.add(buttonSubmit);
+		
+		JPanel resultPanel = new JPanel();
+		resultPanel.setSize(new Dimension(frameWidth, 75));
+		mainPanel.add(resultPanel, BorderLayout.SOUTH);
+		
+		JLabel resultLabel = new JLabel("Enter a value to find out if it's prime!");
+		resultPanel.add(resultLabel);
+		
+		mainFrame.setVisible(true);
+
+	}
+
+}

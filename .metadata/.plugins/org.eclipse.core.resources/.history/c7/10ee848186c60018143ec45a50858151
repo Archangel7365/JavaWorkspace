@@ -1,0 +1,83 @@
+import java.io.*;
+import java.util.Scanner;
+import java.util.ArrayList;
+
+public class SATParser {
+	private File readFile;
+	private Scanner UI;
+	public ArrayList<String> fileInput;
+	
+	public SATParser() {
+		UI = new Scanner(System.in);
+		readFile = null;
+	}
+	
+	public SATParser(String filePath) {
+		try {
+			readFile = new File(filePath);
+			fileFetch();
+		}
+		catch (Exception ex) {
+			System.out.println("File Not Found!");
+			return;
+		}
+		UI = null;
+	}
+	
+	public void setFile(String filePath) {
+		this.readFile = new File(filePath);
+		try {
+			fileFetch();
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	public void fileFetch() throws IOException {
+		fileInput = new ArrayList<String>();
+		FileReader inputRead = new FileReader(readFile);
+		BufferedReader buffRead = new BufferedReader(inputRead);
+		String line;
+		while ((line = buffRead.readLine()) != null) {
+			fileInput.add(line);
+		}
+		inputRead.close();
+		
+	}
+	
+	public int[][] parseInput() throws IOException {
+		int startIndex = 0;
+		int nbvar = 0;
+		int nbclauses = 0;
+		for (int i = 0; i < fileInput.size(); i++) {
+			if (fileInput.get(i).charAt(0) == 'c') {
+				System.out.println(fileInput.get(i).substring(2));
+				startIndex++;
+			}
+			else if (fileInput.get(i).charAt(0) == 'p') {
+				String[] temp = fileInput.get(i).split(" ");
+				if (temp[1] == "cnf") {
+					nbvar = Integer.parseInt(temp[2]);
+					nbclauses = Integer.parseInt(temp[3]);
+					startIndex = i;
+				}
+				else {
+					throw (new IOException("Incorrect File Input"));
+				}
+				break;
+			}
+		}
+		int[][] result = new int[nbclauses][nbvar];
+		int counter = 0;
+		for (int j = startIndex; j < fileInput.size(); j++) {
+			String[] temp = fileInput.get(j).split(" ");
+			for (int k = 0; k < fileInput.get(j).length(); k++) {
+				result[counter][k] = Integer.parseInt(temp[k]);
+			}
+			counter++;
+		}
+		return result;
+	}
+	
+}

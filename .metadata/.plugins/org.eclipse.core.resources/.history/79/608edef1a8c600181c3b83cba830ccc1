@@ -1,0 +1,92 @@
+import java.io.*;
+import java.util.Scanner;
+import java.util.ArrayList;
+
+public class SATParser {
+	private File readFile;
+	private Scanner UI;
+	public ArrayList<String> fileInput;
+
+	public SATParser() {
+		UI = new Scanner(System.in);
+		readFile = null;
+	}
+
+	public SATParser(String filePath) {
+		try {
+			readFile = new File(filePath);
+			fileFetch();
+		}
+		catch (Exception ex) {
+			System.out.println("File Not Found!");
+			return;
+		}
+		UI = null;
+	}
+
+	public void setFile(String filePath) {
+		this.readFile = new File(filePath);
+		try {
+			fileFetch();
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public void fileFetch() throws IOException {
+		fileInput = new ArrayList<String>();
+		FileReader inputRead = new FileReader(readFile);
+		BufferedReader buffRead = new BufferedReader(inputRead);
+		String line;
+		int lineCounter = 0;
+		while ((line = buffRead.readLine()) != null) {
+			fileInput.add(line);
+			//System.out.println(lineCounter + ": " + line);
+			lineCounter++;
+		}
+		inputRead.close();
+
+	}
+
+	public int[][] parseInput() throws IOException {
+		int startIndex = 0;
+		int nbvar = 0;
+		int nbclauses = 0;
+		for (int i = 0; i < fileInput.size(); i++) {
+			if (fileInput.get(i).charAt(0) == 'c') {
+				//System.out.println(fileInput.get(i).substring(2));
+				startIndex++;
+			}
+			else if (fileInput.get(i).charAt(0) == 'p') {
+				String[] temp = fileInput.get(i).split(" ");
+				//System.out.println(temp[1]);
+				if (temp[1].compareTo("cnf") == 0) {
+					nbvar = Integer.parseInt(temp[2]);
+					//System.out.println("nbvar: " + temp[2]);
+					nbclauses = Integer.parseInt(temp[3]);
+					//System.out.println("nbclauses: " + temp[3]);
+					startIndex = i + 1;
+				}
+				else {
+					throw (new IOException("Incorrect File Input"));
+				}
+				break;
+			}
+		}
+		int[][] result = new int[nbclauses][nbvar];
+		System.out.println("startIndex: " + startIndex);
+		System.out.println("nbclauses: " + nbclauses);
+		for (int i = startIndex; i < startIndex + nbclauses; i++) {
+			//System.out.println("Reached");
+			String[] tempArr = fileInput.get(i).split(" ");
+			result[i - startIndex] = new int[tempArr.length];
+			for (int j = 0; j < result[i - startIndex].length - 1; j++) {
+				//System.out.println(tempArr[j]);
+				result[i - startIndex][j] = Integer.parseInt(tempArr[j]);
+			}
+		}
+		return result;
+	}
+
+}
