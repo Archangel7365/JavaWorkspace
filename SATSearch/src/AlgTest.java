@@ -1,21 +1,16 @@
+import java.util.ArrayList;
 
 public class AlgTest {
 
 	public static void main(String[] args) {
-		//DPLL test = new DPLL("src/testFiles/CNF Formulas/uf50-01.cnf");
-		DPLL test = new DPLL("src/yo.txt");
+		DPLL test = new DPLL("src/testFiles/CNF Formulas/uf20-0156.cnf");
+		//DPLL test = new DPLL("src/yo.txt");
 		
-		Formula testFormula = test.getStartFormula();
-		testFormula.printClauses();
-		System.out.println();
+		boolean found = test.DPLLSearch(test.getStartNode());
+		System.out.println("FOUND: " + found);
 		
-		System.out.println("Most frequent element: " + testFormula.freqElem());
-		System.out.println();
 		
-		test.printPureSymbols();
-		System.out.println();
 		
-		test.printUnitClauses();
 	}
 
 }

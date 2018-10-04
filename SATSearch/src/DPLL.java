@@ -1,18 +1,21 @@
 import java.util.ArrayList;
+import java.util.Set;
 
 public class DPLL extends SATAlgorithm {
-	private ArrayList<int[]> pureSymbols;
-	private ArrayList<int[]> unitClauses;
-	private Formula startFormula;
+	private DPLLNode startNode;
+	private Set<Integer> solution;
+	
 	
 	public DPLL(String filename) {
 		super(filename);
+		System.out.println(filename);
+		startNode = new DPLLNode();
 		try {
-			this.startFormula = new Formula(this.parser.nbvars, (ArrayList<ArrayList<Integer>>)this.parser.parseInput());
-			this.pureSymbols = new ArrayList<int[]>();
-			this.unitClauses = new ArrayList<int[]>();
-			calculatePureSymbols(this.startFormula);
-			calculateUnitClauses(this.startFormula);
+			startNode.startFormula = new Formula(this.parser.nbvars, (ArrayList<ArrayList<Integer>>)this.parser.parseInput());
+			startNode.pureSymbols = new ArrayList<int[]>();
+			startNode.unitClauses = new ArrayList<int[]>();
+			startNode.calculatePureSymbols(startNode.startFormula);
+			startNode.calculateUnitClauses(startNode.startFormula);
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
@@ -20,67 +23,57 @@ public class DPLL extends SATAlgorithm {
 		
 	}
 	
-	public ArrayList<int[]> getPureSymbols() {
-		return this.pureSymbols;
+	public DPLLNode getStartNode() {
+		return this.startNode;
 	}
 	
-	public ArrayList<int[]> getUnitClauses() {
-		return this.unitClauses;
-	}
-	
-	public void printPureSymbols() {
-		if (pureSymbols.size() > 0) {
-			System.out.println("elm | count | sign");
-			System.out.println("------------");
-			for (int[] arr: pureSymbols) {
-				System.out.println(arr[0] + "   |   " + arr[1] + "   |   " + arr[2]);
+	public boolean DPLLSearch(DPLLNode nextNode) {
+		nextNode.calculatePureSymbols(nextNode.startFormula);
+		nextNode.calculateUnitClauses(nextNode.startFormula);
+		if (nextNode.startFormula.clauses.size() == 0) {
+			System.out.println("Solution Found!");
+			this.solution = nextNode.tracePath();
+			return true;
+		}
+		if (nextNode.startFormula.hasEmptyClause()) {
+			return false;
+		}
+		if (nextNode.unitClauses.size() > 0) {
+			//System.out.println("NODE");
+			//nextNode.printNode();
+			//nextNode.printUnitClauses();
+			//System.out.println("************************************");
+			ArrayList<Integer> newNodeID = new ArrayList<Integer>();
+			DPLLNode newNode = nextNode.copy();
+			for (int[] arr : nextNode.unitClauses) {
+				newNodeID.add(arr[1]);
+				//System.out.println("ADDING " + arr[1] + " TO UNIT CLAUSES");
+				newNode = newNode.simplify(newNode, arr[1]);
 			}
+			newNode.parent = nextNode;
+			newNode.nodeID = newNodeID;
+			//newNode.printNode();
+			return DPLLSearch(newNode);
+		}
+		int mostFrequentElement = nextNode.startFormula.freqElem();
+		DPLLNode newNode = nextNode.copy();
+		newNode.parent = nextNode;
+		if (DPLLSearch(newNode.simplify(newNode, mostFrequentElement))) {
+			return true;
 		}
 		else {
-			System.out.println("There are no pure symbols!");
+			//System.out.println("Trying anothing value");
+			return DPLLSearch(newNode.simplify(newNode, -mostFrequentElement));
 		}
 	}
 	
-	public void calculatePureSymbols(Formula currFormula) {
-		ArrayList<ArrayList<Integer>> valueCounts = currFormula.countVals(currFormula.clauses);
-		for (int i = 0; i < valueCounts.size(); i++) {
-			if (valueCounts.get(i).get(0) == 0 && valueCounts.get(i).get(1) != 0) {
-				int[] temp = {i, valueCounts.get(i).get(1), -1};
-				pureSymbols.add(temp);
-			}
-			else if (valueCounts.get(i).get(1) == 0 && valueCounts.get(i).get(0) != 0) {
-				int[] temp = {i, valueCounts.get(i).get(0), 1};
-				pureSymbols.add(temp);
-			}
-		}
-	}
-	
-	public Formula getStartFormula() {
-		return this.startFormula;
-	}
-	
-	public void calculateUnitClauses(Formula currFormula) {
-		ArrayList<int[]> result = new ArrayList<int[]>();
-		System.out.println();
-		for (int i = 0; i < currFormula.clauses.size(); i++) {
-			if (currFormula.clauses.get(i).size() == 1) {
-				int[] temp = {i, currFormula.clauses.get(i).get(0)};
-				result.add(temp);
-			}
-		}
-		this.unitClauses = (ArrayList<int[]>)result.clone();
-	}
-	
-	public void printUnitClauses() {
-		if (unitClauses.size() > 0) {
-			System.out.println("cl#| val");
-			System.out.println("------");
-			for (int[] arr: unitClauses) {
-				System.out.println(arr[0] + "  |  " + arr[1]);
-			}
+	public void printSolution() {
+		if (this.solution != null) {
+			System.out.println(solution.toString());
 		}
 		else {
-			System.out.println("There are no unit clauses!");
+			System.out.println("Unsatisfiable!");
 		}
 	}
+	
 }

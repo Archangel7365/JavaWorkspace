@@ -2,8 +2,8 @@ import java.util.ArrayList;
 
 public class Formula {
 	public ArrayList<ArrayList<Integer>> clauses;
-	private int nbvars;
-	private int nbclauses;
+	public int nbvars;
+	public int nbclauses;
 
 	public Formula(int nbvars, int nbclauses, ArrayList<ArrayList<Integer>> clauses) {
 		this.nbvars = nbvars;
@@ -53,7 +53,6 @@ public class Formula {
 				tempTest.clauses.get(i).removeIf(integer -> integer == null);
 			}
 		}
-		tempTest.clauses.removeIf(c -> c.size() <= 0);
 		return tempTest;
 	}
 
@@ -77,6 +76,16 @@ public class Formula {
 			}
 			else if (Math.abs(values.get(i)) == Math.abs(value)) {
 				result = 0;
+			}
+		}
+		return result;
+	}
+	
+	public boolean hasEmptyClause() {
+		boolean result = false;
+		for (ArrayList<Integer> arr : this.clauses) {
+			if (arr.size() <= 0) {
+				result = true;
 			}
 		}
 		return result;
@@ -124,4 +133,10 @@ public class Formula {
 		}
 		return result;
 	}
+	
+	public Formula copy() {
+		Formula newFormula = new Formula(this.nbvars, this.nbclauses, this.clauses);
+		return newFormula;
+	}
+	
 }

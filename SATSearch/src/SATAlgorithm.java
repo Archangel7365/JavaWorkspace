@@ -13,7 +13,7 @@ public class SATAlgorithm {
 		}
 	}
 	
-	public ArrayList<Integer> search() {
+	public ArrayList<Integer> search(Formula currForm) {
 		return null;
 	}
 }
