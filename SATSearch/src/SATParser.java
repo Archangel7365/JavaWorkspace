@@ -60,6 +60,7 @@ public class SATParser {
 			fileInput.add(line);
 		}
 		inputRead.close();
+		parseInput();
 	}
 
 	public int[][] parseInput() throws IOException {

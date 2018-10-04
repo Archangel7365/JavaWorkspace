@@ -1,0 +1,13 @@
+
+public class LocalSearch {
+	
+	
+	public int[] search(int[][] formula, int nbvars) {
+		int[] result = new int[nbvars];
+		
+		
+		
+		return result;
+	}
+	
+}
