@@ -6,6 +6,8 @@ public class LocalSearch {
 		parser = new SATParser(filename);
 		try {
 			parser.fileFetch();
+			parser.parseInput();
+			
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
