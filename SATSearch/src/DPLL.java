@@ -30,8 +30,10 @@ public class DPLL extends SATAlgorithm {
 	
 	public void printPureSymbols() {
 		if (pureSymbols.size() > 0) {
+			System.out.println("elm | count | sign");
+			System.out.println("------------");
 			for (int[] arr: pureSymbols) {
-				System.out.println(arr[0] + " : " + arr[1] + " : " + arr[2]);
+				System.out.println(arr[0] + "   |   " + arr[1] + "   |   " + arr[2]);
 			}
 		}
 		else {
@@ -53,10 +55,13 @@ public class DPLL extends SATAlgorithm {
 		}
 	}
 	
-	
+	public Formula getStartFormula() {
+		return this.startFormula;
+	}
 	
 	public void calculateUnitClauses(Formula currFormula) {
 		ArrayList<int[]> result = new ArrayList<int[]>();
+		System.out.println();
 		for (int i = 0; i < currFormula.clauses.size(); i++) {
 			if (currFormula.clauses.get(i).size() == 1) {
 				int[] temp = {i, currFormula.clauses.get(i).get(0)};
@@ -64,5 +69,18 @@ public class DPLL extends SATAlgorithm {
 			}
 		}
 		this.unitClauses = (ArrayList<int[]>)result.clone();
+	}
+	
+	public void printUnitClauses() {
+		if (unitClauses.size() > 0) {
+			System.out.println("cl#| val");
+			System.out.println("------");
+			for (int[] arr: unitClauses) {
+				System.out.println(arr[0] + "  |  " + arr[1]);
+			}
+		}
+		else {
+			System.out.println("There are no unit clauses!");
+		}
 	}
 }

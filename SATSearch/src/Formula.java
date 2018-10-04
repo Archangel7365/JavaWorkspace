@@ -107,4 +107,21 @@ public class Formula {
 			System.out.println(i + ": " + counts.get(i).get(0) + " | " + counts.get(i).get(1));
 		}
 	}
+	
+	public int freqElem() {
+		ArrayList<ArrayList<Integer>> temp = countVals(this.clauses);
+		int maxCount = 0;
+		int result = 0;
+		for (int i = 0; i < temp.size(); i++) {
+			if (temp.get(i).get(0) > maxCount) {
+				result = i;
+				maxCount = temp.get(i).get(0);
+			}
+			if (temp.get(i).get(1) > maxCount) {
+				result = -i;
+				maxCount = temp.get(i).get(1);
+			}
+		}
+		return result;
+	}
 }
