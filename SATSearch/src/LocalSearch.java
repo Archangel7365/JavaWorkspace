@@ -1,12 +1,12 @@
 
-public class LocalSearch {
-	private SATParser parser;
+public class LocalSearch extends SATAlgorithm {
+	Formula formula;
 	
 	public LocalSearch(String filename) {
-		parser = new SATParser(filename);
+		super(filename);
 		try {
 			parser.fileFetch();
-			parser.parseInput();
+			this.formula = new Formula(parser.nbvars, parser.nbclauses, parser.parseInput());
 			
 		}
 		catch (Exception ex) {
@@ -14,16 +14,8 @@ public class LocalSearch {
 		}
 	}
 	
-	public int[] search(int[][] formula, int nbvars) {
+	public int[] search(int nbvars) {
 		int[] result = new int[nbvars];
-		
-		
-		
-		return result;
-	}
-	
-	public boolean solves(int[][] problem, int[] solution) {
-		boolean result = false;
 		
 		
 		

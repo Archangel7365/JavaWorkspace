@@ -1,18 +1,19 @@
-import java.util.ArrayList;
+
 
 public class ParserTester {
 
 	public static void main(String[] args) {
 		SATParser yoParse = new SATParser("src/yo.txt");
-		//yoParse.getFile();
+		
 		try {
-			yoParse.parseInput();
-			yoParse.printFormula(yoParse.formula);
-			ArrayList<ArrayList<Integer>> valCounts = yoParse.countVals(yoParse.formula);
-			yoParse.printCounts(valCounts);
+			Formula test = new Formula(yoParse.nbvars, yoParse.nbclauses, yoParse.parseInput());
+			test.printClauses();
+			test = test.removeElement(4);
+			System.out.println();
+			test.printClauses();
 		}
-		catch (Exception ex) {
-			ex.printStackTrace();
+		catch (Exception io) {
+			io.printStackTrace();
 		}
 
 	}
