@@ -68,7 +68,7 @@ public class SATParser {
 		nbvars = 0;
 		nbclauses = 0;
 		for (int i = 0; i < fileInput.size(); i++) {
-			System.out.println(fileInput.get(i));
+			System.out.println("first input: " + fileInput.get(i));
 			if (fileInput.get(i).charAt(0) == 'c') {
 				startIndex++;
 			}

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class Formula {
 	public ArrayList<ArrayList<Integer>> clauses;
@@ -56,7 +57,7 @@ public class Formula {
 		return tempTest;
 	}
 
-	public boolean solvedBy(ArrayList<Integer> solution) {
+	public boolean solvedBy(List<Integer> solution) {
 		boolean result = false;
 		Formula tempTest = new Formula(this.nbvars, this.nbclauses, (ArrayList<ArrayList<Integer>>)this.clauses.clone());
 		for (Integer i: solution) {
