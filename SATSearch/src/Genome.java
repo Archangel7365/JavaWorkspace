@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Genome { //I AM JUST TRYING TO GET THIS SHIT TO PUSH!!!
-	public List<Integer> chromosomes;
+	public ArrayList<Integer> chromosomes;
 	private int FitnessScore;
 	private int chromosomeSize;
 	private double mutationFactor;
@@ -13,8 +13,9 @@ public class Genome { //I AM JUST TRYING TO GET THIS SHIT TO PUSH!!!
 	public Genome() {
 		FitnessScore = 0;
 		chromosomes = new ArrayList<Integer>();
+		rng = new Random();
 	}
-	
+
 	public Genome(int maxChroSize) {
 		rng = new Random();
 		mutationFactor = 0.15;
@@ -39,6 +40,24 @@ public class Genome { //I AM JUST TRYING TO GET THIS SHIT TO PUSH!!!
 	public void setFitnessScore(Formula f) {
 		Formula temp = f.copy();
 		if (temp.solvedBy(chromosomes)) {
+			ArrayList<Integer> collisions = temp.getCollisions(this.chromosomes);
+			if (collisions.size() > 0) {
+				for (Integer in: collisions) {
+					ArrayList<Integer> temp1 = chromosomes;
+					temp1 = temp.removeCollisions(temp1, in);
+					if (temp.solvedBy(temp1)) {
+						this.chromosomes = temp1;
+						break;
+					}
+
+					ArrayList<Integer> temp2 = chromosomes;
+					temp2 = temp.removeCollisions(temp2, -in);
+					if (temp.solvedBy(temp2)) {
+						this.chromosomes = temp2;
+						break;
+					}
+				}
+			}
 			this.FitnessScore = 0;
 			this.elite = true;
 		}
@@ -49,11 +68,11 @@ public class Genome { //I AM JUST TRYING TO GET THIS SHIT TO PUSH!!!
 			this.FitnessScore = temp.clauses.size();
 		}
 	}
-	
+
 	public int getFitScore() {
 		return this.FitnessScore;
 	}
-	
+
 	public void mutate() {
 		for (Integer mem: chromosomes) {
 			Double mut = rng.nextDouble();
@@ -67,7 +86,7 @@ public class Genome { //I AM JUST TRYING TO GET THIS SHIT TO PUSH!!!
 			}
 		}
 	}
-	
+
 	public boolean isElite() {
 		return this.elite;
 	}

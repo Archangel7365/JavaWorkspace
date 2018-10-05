@@ -82,6 +82,24 @@ public class Formula {
 		return result;
 	}
 	
+	public ArrayList<Integer> getCollisions(ArrayList<Integer> solution) {
+		ArrayList<Integer> rvalue = new ArrayList<Integer>();
+		for (Integer in : solution) {
+			if (solution.contains(-in)) {
+				rvalue.add(in);
+			}
+		}
+		return rvalue;
+	}
+	
+	public ArrayList<Integer> removeCollisions(ArrayList<Integer> arr, Integer index) {
+		ArrayList<Integer> temp = arr;
+		temp.removeIf(I -> I == -index);
+		temp.removeIf(I -> I == index);
+		temp.add(index);
+		return temp;
+	}
+	
 	public boolean hasEmptyClause() {
 		boolean result = false;
 		for (ArrayList<Integer> arr : this.clauses) {

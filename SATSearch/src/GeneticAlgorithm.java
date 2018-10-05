@@ -12,6 +12,7 @@ public class GeneticAlgorithm {
 	private int fittestGenome;
 	private double birthControl;
 	private Random rng;
+	public int generation;
 
 	public GeneticAlgorithm(Formula startForm, int popSize) {//straight forward constructor
 		this.startFormula = startForm;
@@ -19,12 +20,16 @@ public class GeneticAlgorithm {
 		genomes = new ArrayList<Genome>();
 		this.populationSize = popSize;
 		birthControl = 0.7;
+		rng = new Random();
+		initializePopulation();
 	}
 
 	public void initializePopulation() { //randomly generate the initial population
 		for (int i = 0; i < populationSize; i++) {
 			Genome newBaby = new Genome(chromosomeSize);
 			newBaby.randomizeGenes();
+			genomes.add(newBaby);
+			newBaby.setFitnessScore(startFormula);
 		}
 	}
 
@@ -32,7 +37,7 @@ public class GeneticAlgorithm {
 		generationFitness = 0;	//update the Fitness score of each one
 		bestFitnessScore = startFormula.clauses.size();
 		fittestGenome = 0;
-		
+
 		for (int i = 0; i < genomes.size(); i++) {
 			genomes.get(i).setFitnessScore(startFormula);
 			generationFitness += genomes.get(i).getFitScore();
@@ -50,7 +55,6 @@ public class GeneticAlgorithm {
 			baby2.addAll(dad);
 			return;
 		}
-		
 		int mergePoint = rng.nextInt(chromosomeSize - 1);
 		for (int i = 0; i < chromosomeSize; i++) {
 			if (i < mergePoint) {
@@ -64,34 +68,38 @@ public class GeneticAlgorithm {
 		}
 	}
 
-	public Genome matchmaker() { //find a parent that's "fit enough," but not the fittest
-		double threshold = rng.nextDouble() * generationFitness; //that way the fittest parents aren't the only ones mating
+	public Genome matchmaker() {
+		double temp = rng.nextDouble();
+		double threshold = (1 - temp) * generationFitness; //that way the fittest parents aren't the only ones mating
 		double total = 0;
 		int selectedMate = 0;
 
 		for (int i = 0; i < populationSize; i++) {
 			total += genomes.get(i).getFitScore();
 
-			if (total > threshold) {
+			if (total < threshold) {
 				selectedMate = i;
 				break;
 			}
 		}
 		return genomes.get(selectedMate);
 	}
-	
+
 	public int checkElite() { //check if a genome has a solution!
 		for (int i = 0; i < populationSize; i++) {
 			if (genomes.get(i).isElite()) {
 				return i;
 			}
 		}
-		return 0;
+		return -1;
 	}
 
-	public void makeBabies() { //Look away! They's makin babies
-		updateFitnessScores(); //IT'S NOT THAT HARD
-		
+	public int makeBabies() { //Look away! They's makin babies
+		updateFitnessScores();
+		int answer = checkElite();
+		if (answer != 0) {
+			return answer;
+		}
 		int newBirths = 0;
 		List<Genome> newBrood = new ArrayList<Genome>();
 		while (newBirths < populationSize) {
@@ -104,10 +112,12 @@ public class GeneticAlgorithm {
 			secondBorn.mutate();
 			newBrood.add(firstBorn);
 			newBrood.add(secondBorn);
-			
+
 			newBirths += 2;
 		}
 		genomes.clear();
 		genomes.addAll(newBrood);
+		generation++;
+		return 0;
 	}
 }

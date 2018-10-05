@@ -103,7 +103,13 @@ public class SATParser {
 		}
 		return formula;
 	}
-
+	
+	public Formula getFormula() throws IOException {
+		fileFetch();
+		ArrayList<ArrayList<Integer>> formula = parseInput();
+		Formula result = new Formula(this.nbvars, this.nbclauses, formula);
+		return result;
+	}
 	
 	
 	
