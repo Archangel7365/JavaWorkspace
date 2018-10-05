@@ -2,7 +2,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Genome {
+public class Genome { //I AM JUST TRYING TO GET THIS SHIT TO PUSH!!!
 	public List<Integer> chromosomes;
 	private int FitnessScore;
 	private int chromosomeSize;

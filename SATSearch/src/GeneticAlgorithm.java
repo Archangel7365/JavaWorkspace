@@ -90,7 +90,7 @@ public class GeneticAlgorithm {
 	}
 
 	public void makeBabies() { //Look away! They's makin babies
-		updateFitnessScores();
+		updateFitnessScores(); //IT'S NOT THAT HARD
 		
 		int newBirths = 0;
 		List<Genome> newBrood = new ArrayList<Genome>();
